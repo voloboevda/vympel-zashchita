@@ -1,0 +1,7 @@
+leads.json
+*.bak
+*.bak-*
+.DS_Store
+Thumbs.db
+.env
+.env.*

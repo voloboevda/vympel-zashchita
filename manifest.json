@@ -1,0 +1,32 @@
+{
+  "name": "Вымпел Стройсервис — защита объектов от БПЛА",
+  "short_name": "ВымпелСтройСервис",
+  "description": "Проектирование, изготовление и монтаж антидроновых сеток и инженерных защитных конструкций для нефтегазовой отрасли.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#FAFAF9",
+  "theme_color": "#1E293B",
+  "orientation": "portrait-primary",
+  "lang": "ru",
+  "categories": ["business", "industrial", "productivity"],
+  "icons": [
+    {
+      "src": "/favicon-32.png",
+      "sizes": "32x32",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/favicon-64.png",
+      "sizes": "64x64",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

@@ -1,0 +1,15 @@
+# robots.txt — ВымпелСтройСервис
+
+User-agent: *
+Allow: /
+Disallow: /admin
+
+User-agent: Yandex
+Allow: /
+Disallow: /admin
+
+User-agent: Googlebot
+Allow: /
+Disallow: /admin
+
+Sitemap: https://vympel-stroyservis.ru/sitemap.xml
