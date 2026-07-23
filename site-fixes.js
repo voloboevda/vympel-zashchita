@@ -596,19 +596,25 @@ html.dark #objects.spectrum-on {
     if (oldV4) oldV4.remove();
     var oldV5 = document.getElementById("objects-hover3d-css-v5");
     if (oldV5) oldV5.remove();
-    if (document.getElementById("objects-hover3d-css-v6")) return;
+    if (document.getElementById("objects-hover3d-css-v7")) return;
     const css = `
 #objects.hover3d-on > .mx-auto > ul.grid { display: none !important; }
 .obj-hover3d-list {
   list-style: none; margin: 2rem 0 0; padding: 0;
   display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-columns: 1fr;
   gap: 1px;
   background: color-mix(in srgb, var(--oh-line, rgba(15,23,42,.14)) 100%, transparent);
   border: 1px solid color-mix(in srgb, var(--oh-line, rgba(15,23,42,.14)) 100%, transparent);
 }
-@media (max-width: 720px) {
-  .obj-hover3d-list { grid-template-columns: 1fr; }
+/* 2 columns only when each card has enough width for full titles */
+@media (min-width: 1024px) {
+  .obj-hover3d-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .obj-hover3d-link { gap: .9rem; padding: .9rem 1rem; }
+  .obj-hover3d-icon { width: 3.75rem; height: 3.75rem; }
+  .obj-hover3d-lucide svg { width: 1.45rem; height: 1.45rem; }
 }
 .obj-hover3d {
   --oh-fg: #0f172a;
@@ -728,7 +734,7 @@ html.dark #objects.hover3d-on .obj-hover3d {
 }
 `;
     const style = document.createElement("style");
-    style.id = "objects-hover3d-css-v6";
+    style.id = "objects-hover3d-css-v7";
     style.textContent = css;
     document.head.appendChild(style);
   }
@@ -737,7 +743,7 @@ html.dark #objects.hover3d-on .obj-hover3d {
     const ul = document.createElement("ul");
     ul.className = "obj-hover3d-list";
     ul.setAttribute("data-obj-hover3d", "1");
-    ul.setAttribute("data-obj-hover3d-v", "6");
+    ul.setAttribute("data-obj-hover3d-v", "7");
     ul.innerHTML = items.map(function (item) {
       const tags = (item.tags || []).map(function (t) { return "<li>" + t + "</li>"; }).join("");
       const title = item.title || "";
@@ -780,7 +786,7 @@ html.dark #objects.hover3d-on .obj-hover3d {
       return;
     }
     var existingList = section.querySelector('ul[data-obj-hover3d="1"]');
-    if (existingList && existingList.getAttribute("data-obj-hover3d-v") === "6") {
+    if (existingList && existingList.getAttribute("data-obj-hover3d-v") === "7") {
       section.classList.add("hover3d-on");
       return;
     }
