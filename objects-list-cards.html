@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Wibify lists → Объекты защиты (каталог)</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0b1220;
+      --bg2: #111a2c;
+      --ink: #f8fafc;
+      --muted: rgba(248, 250, 252, 0.62);
+      --line: rgba(255, 255, 255, 0.12);
+      --chip: #151d2e;
+      --chip-h: #1c2740;
+      --safety: #ea580c;
+      --font: "Manrope", system-ui, sans-serif;
+      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --max: min(72rem, calc(100% - 2rem));
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: var(--font);
+      color: var(--ink);
+      background: var(--bg);
+    }
+    .page { width: var(--max); margin: 0 auto; padding: 2.5rem 0 4rem; }
+    .toc {
+      position: sticky; top: 0; z-index: 20;
+      display: flex; flex-wrap: wrap; gap: .4rem;
+      padding: .75rem 0; margin-bottom: 1.5rem;
+      background: rgba(11, 18, 32, 0.92);
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--line);
+    }
+    .toc a {
+      font-family: var(--mono); font-size: .62rem; letter-spacing: .04em;
+      text-transform: uppercase; text-decoration: none;
+      color: var(--muted); border: 1px solid var(--line);
+      padding: .35rem .55rem; background: var(--chip);
+    }
+    .toc a:hover { color: #fff; border-color: rgba(234,88,12,.5); }
+    .hero-note { margin: 0 0 2rem; color: var(--muted); max-width: 44rem; line-height: 1.5; }
+    .hero-note strong { color: #fff; }
+    .block {
+      margin: 0 0 3.25rem; padding: 1.5rem 0 1.75rem;
+      border-top: 1px solid var(--line);
+    }
+    .block-meta {
+      display: flex; flex-wrap: wrap; gap: .5rem .85rem;
+      align-items: baseline; margin-bottom: 1rem;
+    }
+    .block-meta .idx {
+      font-family: var(--mono); font-size: .65rem; color: var(--safety);
+      letter-spacing: .1em; text-transform: uppercase;
+    }
+    .block-meta h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .block-meta .src { color: var(--muted); font-size: .82rem; }
+    .mask-x {
+      overflow: hidden;
+      mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+      -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+    }
+
+    /* 1 Partners chips */
+    .partners-track { display: flex; width: max-content; gap: .7rem; animation: marquee 40s linear infinite; }
+    .partners-marquee--rev .partners-track { animation-direction: reverse; animation-duration: 46s; }
+    @keyframes marquee { to { transform: translateX(-50%); } }
+    @media (hover: hover) {
+      .partners-marquee:hover .partners-track { animation-play-state: paused; }
+      .partner-chip:hover { background: var(--chip-h); border-color: rgba(255,255,255,.28); }
+    }
+    .partner-chip {
+      display: flex; flex-shrink: 0; align-items: center; gap: .75rem;
+      min-width: 14.5rem; padding: .8rem 1rem;
+      border: 1px solid var(--line); background: var(--chip);
+      transition: border-color .24s, background .24s;
+    }
+    .partner-chip .g {
+      width: 2.2rem; height: 2.2rem; display: grid; place-items: center;
+      border: 1px solid var(--line); color: var(--safety); flex-shrink: 0;
+    }
+    .partner-chip .g svg { width: 1.1rem; height: 1.1rem; }
+    .partner-chip strong { display: block; font-size: .92rem; }
+    .partner-chip small { font-family: var(--mono); font-size: .6rem; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); }
+
+    /* 2 Profile signals */
+    .signals { overflow: hidden; border: 1px solid var(--line); background: var(--bg2); }
+    .signals-track {
+      list-style: none; margin: 0; padding: .85rem;
+      display: flex; width: max-content; gap: .65rem;
+      animation: marquee 36s linear infinite;
+    }
+    @media (hover: hover) {
+      .signals:hover .signals-track { animation-play-state: paused; }
+      .signals-track li:hover { background: var(--chip-h); border-color: rgba(234,88,12,.4); transform: translateY(-2px); }
+    }
+    .signals-track li {
+      display: flex; flex-shrink: 0; align-items: center; gap: .55rem;
+      padding: .65rem .9rem; border: 1px solid var(--line); background: var(--chip);
+      transition: background .2s, border-color .2s, transform .2s;
+    }
+    .signals-track .ico { color: var(--safety); display: grid; place-items: center; }
+    .signals-track .ico svg { width: 1rem; height: 1rem; }
+    .signals-track strong { font-size: .85rem; white-space: nowrap; }
+
+    /* 3 Review marquee */
+    .reviews-track { display: flex; width: max-content; gap: .85rem; animation: marquee 50s linear infinite; }
+    @media (hover: hover) { .reviews:hover .reviews-track { animation-play-state: paused; } }
+    .review-card {
+      flex-shrink: 0; width: 18rem; padding: 1rem 1.1rem;
+      border: 1px solid var(--line); background: var(--chip);
+    }
+    .review-card .who { font-size: .8rem; color: var(--muted); margin-bottom: .35rem; }
+    .review-card .stars { color: var(--safety); letter-spacing: .08em; margin-bottom: .4rem; }
+    .review-card p { margin: 0; font-size: .86rem; line-height: 1.45; color: rgba(248,250,252,.82); }
+
+    /* 4 Project list vertical */
+    .project-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); }
+    .project-list li { border-bottom: 1px solid var(--line); }
+    .project-list li:last-child { border-bottom: 0; }
+    .project-list a {
+      display: flex; justify-content: space-between; align-items: center; gap: 1rem;
+      padding: .95rem 1.1rem; color: inherit; text-decoration: none;
+      transition: background .2s, padding-left .2s;
+    }
+    .project-list a:hover { background: var(--chip-h); padding-left: 1.35rem; }
+    .project-list .t { font-weight: 700; }
+    .project-list .d { color: var(--muted); font-size: .82rem; }
+    .project-list .arr { color: var(--safety); }
+
+    /* 4b Portfolio image strip (placeholder panels) */
+    .folio-track { display: flex; width: max-content; gap: .75rem; animation: marquee 44s linear infinite; }
+    @media (hover: hover) {
+      .folio:hover .folio-track { animation-play-state: paused; }
+      .folio-card:hover { transform: translateY(-4px) scale(1.01); border-color: rgba(234,88,12,.45); }
+    }
+    .folio-card {
+      flex-shrink: 0; width: 15rem; height: 9rem;
+      border: 1px solid var(--line); background: linear-gradient(145deg, #1a2438, #0f172a);
+      display: grid; align-content: end; padding: .85rem;
+      transition: transform .25s ease, border-color .25s;
+    }
+    .folio-card strong { font-size: .9rem; }
+    .folio-card span { font-size: .72rem; color: var(--muted); }
+
+    /* 5 Industries carousel */
+    .industries-track {
+      display: flex; gap: .75rem; overflow-x: auto; padding-bottom: .35rem;
+      scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch;
+    }
+    .industry-card {
+      flex: 0 0 min(17rem, 78vw); scroll-snap-align: start;
+      border: 1px solid var(--line); background: var(--chip);
+      text-decoration: none; color: inherit;
+      transition: border-color .2s, transform .2s;
+    }
+    .industry-card:hover { border-color: rgba(234,88,12,.5); transform: translateY(-3px); }
+    .industry-visual {
+      height: 7.5rem; display: grid; place-items: center;
+      background: linear-gradient(160deg, rgba(234,88,12,.35), rgba(15,23,42,.9));
+      color: #fff; border-bottom: 1px solid var(--line);
+    }
+    .industry-visual svg { width: 1.6rem; height: 1.6rem; }
+    .industry-body { padding: .9rem 1rem .35rem; }
+    .industry-body h3 { margin: 0 0 .25rem; font-size: 1rem; }
+    .industry-body p { margin: 0; color: var(--muted); font-size: .82rem; }
+    .industry-foot {
+      display: flex; justify-content: space-between; padding: .75rem 1rem 1rem;
+      font-family: var(--mono); font-size: .62rem; letter-spacing: .06em;
+      text-transform: uppercase; color: var(--safety);
+    }
+
+    /* 6 Services horizontal cards */
+    .service-list {
+      display: flex; gap: .75rem; overflow-x: auto; padding-bottom: .35rem;
+      scroll-snap-type: x mandatory;
+    }
+    .service-card {
+      flex: 0 0 min(16.5rem, 80vw); scroll-snap-align: start;
+      padding: 1.1rem 1.15rem; border: 1px solid var(--line); background: var(--chip);
+      transition: transform .2s, border-color .2s;
+    }
+    .service-card:hover { transform: translate(3px, -2px); border-color: rgba(255,255,255,.28); }
+    .service-card .n { font-family: var(--mono); font-size: .62rem; color: var(--safety); }
+    .service-card h3 { margin: .45rem 0 .4rem; font-size: 1.05rem; }
+    .service-card p { margin: 0; color: var(--muted); font-size: .84rem; line-height: 1.4; }
+    .service-tags { display: flex; flex-wrap: wrap; gap: .3rem; margin-top: .75rem; padding: 0; list-style: none; }
+    .service-tags li {
+      font-size: .68rem; padding: .2rem .45rem; border: 1px solid var(--line); color: var(--muted);
+    }
+
+    /* 7 Process timeline */
+    .process-stack { list-style: none; margin: 0; padding: 0; border-left: 2px solid rgba(234,88,12,.35); }
+    .process-step {
+      position: relative; padding: 0 0 1.25rem 1.25rem;
+    }
+    .process-step:last-child { padding-bottom: 0; }
+    .process-step::before {
+      content: ""; position: absolute; left: -0.4rem; top: .35rem;
+      width: .55rem; height: .55rem; background: var(--safety);
+      box-shadow: 0 0 0 0 rgba(234,88,12,.35);
+      transition: box-shadow .25s, transform .25s;
+    }
+    .process-step:hover::before {
+      transform: scale(1.25);
+      box-shadow: 0 0 0 .35rem rgba(234,88,12,.2);
+    }
+    .process-step .lab { font-family: var(--mono); font-size: .62rem; color: var(--safety); letter-spacing: .08em; text-transform: uppercase; }
+    .process-step h3 { margin: .2rem 0 .3rem; font-size: 1rem; }
+    .process-step ul { margin: 0; padding-left: 1rem; color: var(--muted); font-size: .86rem; }
+    .process-step li { margin: .2rem 0; }
+
+    /* 8 Journal numbered rows + tags */
+    .journal-list { list-style: none; margin: 0; padding: 0; border: 1px solid var(--line); }
+    .journal-list > li { border-bottom: 1px solid var(--line); }
+    .journal-list > li:last-child { border-bottom: 0; }
+    .journal-row {
+      display: grid; grid-template-columns: 3rem 1fr auto; gap: 1rem; align-items: start;
+      padding: 1rem 1.1rem; transition: background .2s;
+    }
+    .journal-row:hover { background: var(--chip-h); }
+    .journal-row .n { font-family: var(--mono); color: var(--safety); font-size: .75rem; }
+    .journal-row h3 { margin: 0 0 .3rem; font-size: .98rem; }
+    .journal-row p { margin: 0 0 .55rem; color: var(--muted); font-size: .84rem; }
+    .journal-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .3rem; }
+    .journal-tags li { font-style: italic; font-size: .72rem; color: rgba(248,250,252,.55); border-bottom: 1px solid rgba(234,88,12,.35); }
+    .journal-row .arr { color: var(--safety); align-self: center; }
+
+    /* 9a Evidence list */
+    .evidence-list { list-style: none; margin: 0; padding: 0; }
+    .evidence-list li {
+      display: flex; justify-content: space-between; gap: 1rem; align-items: center;
+      padding: .8rem 0; border-bottom: 1px solid var(--line);
+    }
+    .evidence-list strong { display: block; font-size: .92rem; }
+    .evidence-list span { color: var(--muted); font-size: .8rem; }
+    .evidence-list a { color: var(--safety); font-size: .8rem; text-decoration: none; }
+
+    /* 9b Feature grid */
+    .feature-list {
+      list-style: none; margin: 0; padding: 0;
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .75rem;
+    }
+    @media (max-width: 640px) { .feature-list { grid-template-columns: 1fr; } }
+    .feature-list li {
+      position: relative; padding: 1rem 1.05rem 1rem 1.2rem;
+      border: 1px solid var(--line); background: var(--chip); overflow: hidden;
+    }
+    .feature-list li::before {
+      content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+      background: var(--safety); transform: scaleY(0); transform-origin: bottom;
+      transition: transform .25s ease;
+    }
+    .feature-list li:hover::before { transform: scaleY(1); }
+    .feature-list h3 { margin: 0 0 .35rem; font-size: .95rem; }
+    .feature-list p { margin: 0; color: var(--muted); font-size: .84rem; line-height: 1.4; }
+
+    /* 10 FAQ accordion */
+    .faq-list { border: 1px solid var(--line); }
+    .faq-item { border-bottom: 1px solid var(--line); }
+    .faq-item:last-child { border-bottom: 0; }
+    .faq-item button {
+      width: 100%; text-align: left; background: transparent; border: 0; color: inherit;
+      font: inherit; font-weight: 700; padding: 1rem 1.1rem; cursor: pointer;
+      display: flex; justify-content: space-between; gap: 1rem;
+    }
+    .faq-item button:hover { color: var(--safety); }
+    .faq-item .ans {
+      display: none; margin: 0; padding: 0 1.1rem 1rem;
+      color: var(--muted); font-size: .9rem; line-height: 1.5;
+    }
+    .faq-item.is-open .ans { display: block; }
+    .faq-item.is-open button span:last-child { transform: rotate(45deg); }
+
+    /* 11 Footer link list */
+    .footer-links { list-style: none; margin: 0; padding: 0; columns: 2; gap: 2rem; }
+    @media (max-width: 640px) { .footer-links { columns: 1; } }
+    .footer-links a {
+      display: flex; justify-content: space-between; padding: .45rem 0;
+      color: var(--muted); text-decoration: none; border-bottom: 1px solid transparent;
+    }
+    .footer-links a:hover { color: #fff; border-bottom-color: rgba(234,88,12,.4); }
+    .footer-links .arr { color: var(--safety); }
+
+    @media (prefers-reduced-motion: reduce) {
+      .partners-track, .signals-track, .reviews-track, .folio-track { animation: none; flex-wrap: wrap; width: auto; }
+      .mask-x { mask-image: none; -webkit-mask-image: none; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <nav class="toc" aria-label="Каталог списков">
+      <a href="#p01">01 Partners</a>
+      <a href="#p02">02 Signals</a>
+      <a href="#p03">03 Reviews</a>
+      <a href="#p04">04 Projects</a>
+      <a href="#p04b">04b Folio</a>
+      <a href="#p05">05 Industries</a>
+      <a href="#p06">06 Services</a>
+      <a href="#p07">07 Process</a>
+      <a href="#p08">08 Journal</a>
+      <a href="#p09a">09 Evidence</a>
+      <a href="#p09b">09b Features</a>
+      <a href="#p10">10 FAQ</a>
+      <a href="#p11">11 Footer</a>
+    </nav>
+
+    <p class="hero-note"><strong>Каталог list-паттернов Wibify</strong> (wibify.de), контент подставлен под «Объекты защиты». Все блоки подряд в одном файле для выбора.</p>
+
+    <!-- 01 -->
+    <section class="block" id="p01">
+      <div class="block-meta">
+        <span class="idx">01</span>
+        <h2>Partners marquee</h2>
+        <span class="src">section.partners · горизонтальные чипы · hover pause</span>
+      </div>
+      <div class="partners-marquee mask-x" style="margin-bottom:.7rem">
+        <div class="partners-track">
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></span><span><strong>Резервуары РВС</strong><small>Резервуарные парки</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></span><span><strong>Сепараторы</strong><small>Нефтегазовые</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg></span><span><strong>БКНС</strong><small>Насосные</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></span><span><strong>Подстанции</strong><small>Энергетика</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></span><span><strong>КИПиА</strong><small>Автоматика</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></svg></span><span><strong>Операторные</strong><small>Блок-боксы</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></span><span><strong>Резервуары РВС</strong><small>Резервуарные парки</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></span><span><strong>Сепараторы</strong><small>Нефтегазовые</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg></span><span><strong>БКНС</strong><small>Насосные</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></span><span><strong>Подстанции</strong><small>Энергетика</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12 14 4-4"/><path d="M3.34 19a10 10 0 1 1 17.32 0"/></svg></span><span><strong>КИПиА</strong><small>Автоматика</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 12h4"/><path d="M10 8h4"/><path d="M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16"/></svg></span><span><strong>Операторные</strong><small>Блок-боксы</small></span></div>
+        </div>
+      </div>
+      <div class="partners-marquee partners-marquee--rev mask-x">
+        <div class="partners-track">
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></span><span><strong>Узлы учёта</strong><small>Метрология</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg></span><span><strong>Нефтебазы</strong><small>Площадки</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16h.01"/><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5"/><path d="M8 16h.01"/></svg></span><span><strong>Техноустановки</strong><small>УКПН / УКПГ</small></span></div>
+          <div class="partner-chip"><span class="g" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></span><span><strong>Парки РВС</strong><small>Группы</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5V19A9 3 0 0 0 21 19V5"/><path d="M3 12A9 3 0 0 0 21 12"/></svg></span><span><strong>Узлы учёта</strong><small>Метрология</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 21h18"/><path d="M5 21V7l8-4v18"/><path d="M19 21V11l-6-4"/></svg></span><span><strong>Нефтебазы</strong><small>Площадки</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 16h.01"/><path d="M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5"/><path d="M8 16h.01"/></svg></span><span><strong>Техноустановки</strong><small>УКПН / УКПГ</small></span></div>
+          <div class="partner-chip" aria-hidden="true"><span class="g"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></span><span><strong>Парки РВС</strong><small>Группы</small></span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 02 -->
+    <section class="block" id="p02">
+      <div class="block-meta">
+        <span class="idx">02</span>
+        <h2>Profile signals</h2>
+        <span class="src">profile-signals · горизонтальная полоса пунктов · hover lift</span>
+      </div>
+      <div class="signals mask-x">
+        <ul class="signals-track">
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><strong>Защита без остановки</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></span><strong>Свой цех и монтаж</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M2 12h20"/></svg></span><strong>Вся Россия</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><strong>КМ / КМД</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg></span><strong>Доступ к оборудованию</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/></svg></span><strong>Защита без остановки</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/></svg></span><strong>Свой цех и монтаж</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a14.5 14.5 0 0 0 0 20"/><path d="M2 12h20"/></svg></span><strong>Вся Россия</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg></span><strong>КМ / КМД</strong></li>
+          <li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10"/></svg></span><strong>Доступ к оборудованию</strong></li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- 03 -->
+    <section class="block" id="p03">
+      <div class="block-meta">
+        <span class="idx">03</span>
+        <h2>Review marquee</h2>
+        <span class="src">profile-review-marquee · горизонтальные карточки-отзывы</span>
+      </div>
+      <div class="reviews mask-x">
+        <div class="reviews-track">
+          <article class="review-card"><div class="who">Инженер ПТО · нефтебаза</div><div class="stars">★★★★★</div><p>Нужна была защита парка РВС без остановки — монтаж уложились в окно ремонта.</p></article>
+          <article class="review-card"><div class="who">Главный энергетик</div><div class="stars">★★★★★</div><p>Подстанцию закрыли сеткой с учётом электробезопасности и доступов к РУ.</p></article>
+          <article class="review-card"><div class="who">Служба КИПиА</div><div class="stars">★★★★★</div><p>Проёмы под обслуживание приборов сохранили — регламент без демонтажа защиты.</p></article>
+          <article class="review-card"><div class="who">Руководитель проекта</div><div class="stars">★★★★★</div><p>От обследования до сдачи — один подрядчик: проект, цех, монтаж.</p></article>
+          <article class="review-card" aria-hidden="true"><div class="who">Инженер ПТО · нефтебаза</div><div class="stars">★★★★★</div><p>Нужна была защита парка РВС без остановки — монтаж уложились в окно ремонта.</p></article>
+          <article class="review-card" aria-hidden="true"><div class="who">Главный энергетик</div><div class="stars">★★★★★</div><p>Подстанцию закрыли сеткой с учётом электробезопасности и доступов к РУ.</p></article>
+          <article class="review-card" aria-hidden="true"><div class="who">Служба КИПиА</div><div class="stars">★★★★★</div><p>Проёмы под обслуживание приборов сохранили — регламент без демонтажа защиты.</p></article>
+          <article class="review-card" aria-hidden="true"><div class="who">Руководитель проекта</div><div class="stars">★★★★★</div><p>От обследования до сдачи — один подрядчик: проект, цех, монтаж.</p></article>
+        </div>
+      </div>
+    </section>
+
+    <!-- 04 -->
+    <section class="block" id="p04">
+      <div class="block-meta">
+        <span class="idx">04</span>
+        <h2>Project list</h2>
+        <span class="src">project-list · вертикальные строки · hover сдвиг</span>
+      </div>
+      <ul class="project-list">
+        <li><a href="/services/zashchita-rvs-ot-bpla"><span><span class="t">Резервуары РВС</span><br><span class="d">Защита вертикальных стальных резервуаров</span></span><span class="arr">→</span></a></li>
+        <li><a href="/services/zashchita-neftebaz-ot-bpla"><span><span class="t">Нефтебазы</span><br><span class="d">Комплексная защита площадки</span></span><span class="arr">→</span></a></li>
+        <li><a href="/services/zashchita-separatorov-ot-bpla"><span><span class="t">Сепараторы</span><br><span class="d">С сохранением технологических проёмов</span></span><span class="arr">→</span></a></li>
+        <li><a href="/services/zashchita-nasosnyh-stantsiy-ot-bpla"><span><span class="t">Насосные станции (БКНС)</span><br><span class="d">Блочные кустовые станции</span></span><span class="arr">→</span></a></li>
+        <li><a href="/services/zashchita-podstantsiy-ot-bpla"><span><span class="t">Трансформаторные подстанции</span><br><span class="d">Без нарушения электробезопасности</span></span><span class="arr">→</span></a></li>
+        <li><a href="/services/zashchita-operatornyh-ot-bpla"><span><span class="t">Операторные</span><br><span class="d">Персонал и системы управления</span></span><span class="arr">→</span></a></li>
+      </ul>
+    </section>
+
+    <!-- 04b -->
+    <section class="block" id="p04b">
+      <div class="block-meta">
+        <span class="idx">04b</span>
+        <h2>Portfolio marquee</h2>
+        <span class="src">portfolio-marquee · горизонтальные превью · hover lift</span>
+      </div>
+      <div class="folio mask-x">
+        <div class="folio-track">
+          <div class="folio-card" tabindex="0"><strong>РВС</strong><span>Резервуарный парк</span></div>
+          <div class="folio-card" tabindex="0"><strong>Нефтебаза</strong><span>Площадка</span></div>
+          <div class="folio-card" tabindex="0"><strong>БКНС</strong><span>Насосная</span></div>
+          <div class="folio-card" tabindex="0"><strong>ТП</strong><span>Подстанция</span></div>
+          <div class="folio-card" tabindex="0"><strong>Операторная</strong><span>Блок-бокс</span></div>
+          <div class="folio-card" tabindex="0" aria-hidden="true"><strong>РВС</strong><span>Резервуарный парк</span></div>
+          <div class="folio-card" tabindex="0" aria-hidden="true"><strong>Нефтебаза</strong><span>Площадка</span></div>
+          <div class="folio-card" tabindex="0" aria-hidden="true"><strong>БКНС</strong><span>Насосная</span></div>
+          <div class="folio-card" tabindex="0" aria-hidden="true"><strong>ТП</strong><span>Подстанция</span></div>
+          <div class="folio-card" tabindex="0" aria-hidden="true"><strong>Операторная</strong><span>Блок-бокс</span></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 05 -->
+    <section class="block" id="p05">
+      <div class="block-meta">
+        <span class="idx">05</span>
+        <h2>Industries carousel</h2>
+        <span class="src">industries-carousel · горизонтальный скролл карточек</span>
+      </div>
+      <div class="industries-track">
+        <a class="industry-card" href="/services/zashchita-rvs-ot-bpla"><div class="industry-visual" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><ellipse cx="12" cy="5" rx="9" ry="3"/><path d="M3 5v14a9 3 0 0 0 18 0V5"/></svg></div><div class="industry-body"><h3>Резервуары РВС</h3><p>Вертикальные стальные резервуары и парки</p></div><div class="industry-foot"><span>Объект защиты</span><span>→</span></div></a>
+        <a class="industry-card" href="/services/zashchita-nasosnyh-stantsiy-ot-bpla"><div class="industry-visual" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/><path d="M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1"/></svg></div><div class="industry-body"><h3>БКНС</h3><p>Насосное оборудование блочных станций</p></div><div class="industry-foot"><span>Объект защиты</span><span>→</span></div></a>
+        <a class="industry-card" href="/services/zashchita-podstantsiy-ot-bpla"><div class="industry-visual" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M4 14a1 1 0 0 1-.78-1.63l9.9-10.2a.5.5 0 0 1 .86.46l-1.92 6.02A1 1 0 0 0 13 10h7a1 1 0 0 1 .78 1.63l-9.9 10.2a.5.5 0 0 1-.86-.46l1.92-6.02A1 1 0 0 0 11 14z"/></svg></div><div class="industry-body"><h3>Подстанции</h3><p>Трансформаторы и распределительные устройства</p></div><div class="industry-foot"><span>Объект защиты</span><span>→</span></div></a>
+        <a class="industry-card" href="/services/zashchita-separatorov-ot-bpla"><div class="industry-visual" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4"/></svg></div><div class="industry-body"><h3>Сепараторы</h3><p>Сепарационное оборудование с проёмами</p></div><div class="industry-foot"><span>Объект защиты</span><span>→</span></div></a>
+        <a class="industry-card" href="/services/zashchita-operatornyh-ot-bpla"><div class="industry-visual" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75"><path d="M6 22V4a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v18Z"/><path d="M10 12h4"/><path d="M10 8h4"/></svg></div><div class="industry-body"><h3>Операторные</h3><p>Персонал и системы управления</p></div><div class="industry-foot"><span>Объект защиты</span><span>→</span></div></a>
+      </div>
+    </section>
+
+    <!-- 06 -->
+    <section class="block" id="p06">
+      <div class="block-meta">
+        <span class="idx">06</span>
+        <h2>Services carousel</h2>
+        <span class="src">service-list · горизонтальные карточки + теги</span>
+      </div>
+      <div class="service-list">
+        <article class="service-card"><div class="n">01 / 06</div><h3>РВС</h3><p>Сетки и каркасы над резервуарными парками.</p><ul class="service-tags"><li>Парк</li><li>Каркас</li><li>Доступ</li></ul></article>
+        <article class="service-card"><div class="n">02 / 06</div><h3>Нефтебазы</h3><p>Комплексная защита технологических площадок.</p><ul class="service-tags"><li>Площадка</li><li>Монтаж</li><li>Этапы</li></ul></article>
+        <article class="service-card"><div class="n">03 / 06</div><h3>БКНС</h3><p>Защита насосного оборудования без простоя.</p><ul class="service-tags"><li>Насосы</li><li>Блоки</li><li>Регламент</li></ul></article>
+        <article class="service-card"><div class="n">04 / 06</div><h3>Подстанции</h3><p>С учётом электробезопасности и зазоров.</p><ul class="service-tags"><li>ТП</li><li>РУ</li><li>Зазоры</li></ul></article>
+        <article class="service-card"><div class="n">05 / 06</div><h3>КИПиА</h3><p>Защита приборов с доступом к измерениям.</p><ul class="service-tags"><li>Шкафы</li><li>Датчики</li><li>Линии</li></ul></article>
+        <article class="service-card"><div class="n">06 / 06</div><h3>Операторные</h3><p>Защита персонала и АСУ в блок-боксах.</p><ul class="service-tags"><li>АСУ</li><li>Эвакуация</li><li>Модули</li></ul></article>
+      </div>
+    </section>
+
+    <!-- 07 -->
+    <section class="block" id="p07">
+      <div class="block-meta">
+        <span class="idx">07</span>
+        <h2>Process stack</h2>
+        <span class="src">process-step-stack · вертикальный таймлайн · hover glow</span>
+      </div>
+      <ol class="process-stack">
+        <li class="process-step"><div class="lab">01 · Обследование</div><h3>Выезд на объект</h3><ul><li>Обмеры и риски БПЛА</li><li>Схема доступов</li><li>Бриф по этапам</li></ul></li>
+        <li class="process-step"><div class="lab">02 · Проект</div><h3>КМ / КМД</h3><ul><li>Расчёт нагрузок</li><li>Спецификация</li><li>Согласование</li></ul></li>
+        <li class="process-step"><div class="lab">03 · Производство</div><h3>Свой цех</h3><ul><li>Каркас и сетка</li><li>Контроль качества</li><li>Отгрузка</li></ul></li>
+        <li class="process-step"><div class="lab">04 · Монтаж</div><h3>На объекте</h3><ul><li>Без остановки</li><li>Сдача</li><li>Сопровождение</li></ul></li>
+      </ol>
+    </section>
+
+    <!-- 08 -->
+    <section class="block" id="p08">
+      <div class="block-meta">
+        <span class="idx">08</span>
+        <h2>Marketing journal list</h2>
+        <span class="src">marketing-journal__list + __tags · нумерованные строки</span>
+      </div>
+      <ul class="journal-list">
+        <li><div class="journal-row"><span class="n">01</span><div><h3>Резервуары и парки</h3><p>Перекрытие площади, каркас под геометрию РВС.</p><ul class="journal-tags"><li>РВС</li><li>Парк</li><li>Каркас</li></ul></div><span class="arr">→</span></div></li>
+        <li><div class="journal-row"><span class="n">02</span><div><h3>Насосные и сепараторы</h3><p>Защита с сохранением проёмов и регламента.</p><ul class="journal-tags"><li>БКНС</li><li>Сепараторы</li><li>Проёмы</li></ul></div><span class="arr">→</span></div></li>
+        <li><div class="journal-row"><span class="n">03</span><div><h3>Энергетика и КИПиА</h3><p>Подстанции и приборы без нарушения ТБ.</p><ul class="journal-tags"><li>ТП</li><li>КИПиА</li><li>ТБ</li></ul></div><span class="arr">→</span></div></li>
+        <li><div class="journal-row"><span class="n">04</span><div><h3>Операторные и узлы учёта</h3><p>Персонал, АСУ и метрологический доступ.</p><ul class="journal-tags"><li>Операторные</li><li>Учёт</li><li>АСУ</li></ul></div><span class="arr">→</span></div></li>
+      </ul>
+    </section>
+
+    <!-- 09a -->
+    <section class="block" id="p09a">
+      <div class="block-meta">
+        <span class="idx">09a</span>
+        <h2>Evidence list</h2>
+        <span class="src">result-evidence-list · строки с ссылкой</span>
+      </div>
+      <ul class="evidence-list">
+        <li><div><strong>Сервисные страницы объектов</strong><span>РВС, нефтебазы, БКНС, подстанции…</span></div><a href="/services">Смотреть ↗</a></li>
+        <li><div><strong>Кейсы и география</strong><span>Проекты по всей России</span></div><a href="/#objects">К блоку ↗</a></li>
+        <li><div><strong>Производство</strong><span>Собственный цех и контроль качества</span></div><a href="/#manufacturing">Подробнее ↗</a></li>
+      </ul>
+    </section>
+
+    <!-- 09b -->
+    <section class="block" id="p09b">
+      <div class="block-meta">
+        <span class="idx">09b</span>
+        <h2>Feature list</h2>
+        <span class="src">result-feature-list · сетка 2 кол. · hover accent bar</span>
+      </div>
+      <ul class="feature-list">
+        <li><h3>Без остановки производства</h3><p>Монтаж на действующих объектах, типовые узлы сокращают срок.</p></li>
+        <li><h3>Доступ к оборудованию</h3><p>Технологические проёмы — регламент без снятия защиты.</p></li>
+        <li><h3>Под геометрию объекта</h3><p>Индивидуальный каркас под РВС, БКНС, ТП и операторные.</p></li>
+        <li><h3>Полный цикл</h3><p>Обследование, КМ/КМД, изготовление, монтаж, сдача.</p></li>
+      </ul>
+    </section>
+
+    <!-- 10 -->
+    <section class="block" id="p10">
+      <div class="block-meta">
+        <span class="idx">10</span>
+        <h2>FAQ list</h2>
+        <span class="src">seo-faq-list · аккордеон</span>
+      </div>
+      <div class="faq-list" id="faq-demo">
+        <div class="faq-item is-open">
+          <button type="button" aria-expanded="true">Какие объекты защищаете?<span>+</span></button>
+          <p class="ans">РВС, нефтебазы, сепараторы, БКНС, подстанции, КИПиА, операторные, узлы учёта и технологические установки.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" aria-expanded="false">Можно без остановки производства?<span>+</span></button>
+          <p class="ans">Да. Монтаж выполняется на действующих объектах, типовые элементы минимизируют влияние на эксплуатацию.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" aria-expanded="false">Нужен ли выезд?<span>+</span></button>
+          <p class="ans">Первичный выезд специалиста для обследования — бесплатно. Дальше — проект и расчёт.</p>
+        </div>
+        <div class="faq-item">
+          <button type="button" aria-expanded="false">Работаете по всей России?<span>+</span></button>
+          <p class="ans">Да. Реализуем проекты во всех регионах, логистика и монтаж своей бригадой.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 11 -->
+    <section class="block" id="p11">
+      <div class="block-meta">
+        <span class="idx">11</span>
+        <h2>Footer link list</h2>
+        <span class="src">site-footer-link-list · колонки ссылок</span>
+      </div>
+      <ul class="footer-links">
+        <li><a href="/services/zashchita-rvs-ot-bpla"><span>Резервуары РВС</span><span class="arr">↗</span></a></li>
+        <li><a href="/services/zashchita-neftebaz-ot-bpla"><span>Нефтебазы</span><span class="arr">↗</span></a></li>
+        <li><a href="/services/zashchita-separatorov-ot-bpla"><span>Сепараторы</span><span class="arr">↗</span></a></li>
+        <li><a href="/services/zashchita-nasosnyh-stantsiy-ot-bpla"><span>Насосные (БКНС)</span><span class="arr">↗</span></a></li>
+        <li><a href="/services/zashchita-podstantsiy-ot-bpla"><span>Подстанции</span><span class="arr">↗</span></a></li>
+        <li><a href="/services/zashchita-operatornyh-ot-bpla"><span>Операторные</span><span class="arr">↗</span></a></li>
+        <li><a href="/#objects"><span>Все объекты</span><span class="arr">↗</span></a></li>
+        <li><a href="/#contacts"><span>Контакты</span><span class="arr">↗</span></a></li>
+      </ul>
+    </section>
+  </div>
+
+  <script>
+    document.querySelectorAll("#faq-demo .faq-item button").forEach(function (btn) {
+      btn.addEventListener("click", function () {
+        var item = btn.parentElement;
+        var open = item.classList.contains("is-open");
+        document.querySelectorAll("#faq-demo .faq-item").forEach(function (el) {
+          el.classList.remove("is-open");
+          el.querySelector("button").setAttribute("aria-expanded", "false");
+        });
+        if (!open) {
+          item.classList.add("is-open");
+          btn.setAttribute("aria-expanded", "true");
+        }
+      });
+    });
+  </script>
+</body>
+</html>

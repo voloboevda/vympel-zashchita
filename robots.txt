@@ -1,4 +1,4 @@
-# robots.txt — ВымпелСтройСервис
+# robots.txt — ВымпелСтройСервис / вымпел-защита.рф
 
 User-agent: *
 Allow: /
@@ -12,4 +12,4 @@ User-agent: Googlebot
 Allow: /
 Disallow: /admin
 
-Sitemap: https://vympel-stroyservis.ru/sitemap.xml
+Sitemap: https://вымпел-защита.рф/sitemap.xml

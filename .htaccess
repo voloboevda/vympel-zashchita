@@ -35,3 +35,13 @@ ErrorDocument 404 /404.html
   Header set X-Frame-Options "SAMEORIGIN"
   Header set X-X-XSS-Protection "1; mode=block"
 </IfModule>
+
+# Force revalidate homepage HTML
+<IfModule mod_headers.c>
+  <FilesMatch "^index\\.html$">
+    Header set Cache-Control "no-cache, no-store, must-revalidate"
+    Header set Pragma "no-cache"
+    Header set Expires "0"
+  </FilesMatch>
+</IfModule>
+

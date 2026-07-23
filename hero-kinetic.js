@@ -1,0 +1,1 @@
+/* disabled: photo hero active */
