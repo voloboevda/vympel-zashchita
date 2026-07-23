@@ -596,25 +596,23 @@ html.dark #objects.spectrum-on {
     if (oldV4) oldV4.remove();
     var oldV5 = document.getElementById("objects-hover3d-css-v5");
     if (oldV5) oldV5.remove();
-    if (document.getElementById("objects-hover3d-css-v7")) return;
+    var oldV7 = document.getElementById("objects-hover3d-css-v7");
+    if (oldV7) oldV7.remove();
+    var oldV8 = document.getElementById("objects-hover3d-css-v8");
+    if (oldV8) oldV8.remove();
+    if (document.getElementById("objects-hover3d-css-v9")) return;
     const css = `
 #objects.hover3d-on > .mx-auto > ul.grid { display: none !important; }
 .obj-hover3d-list {
   list-style: none; margin: 2rem 0 0; padding: 0;
   display: grid;
-  grid-template-columns: 1fr;
+  /* minmax(0,1fr) — иначе nowrap-заголовки раздувают колонку шире экрана */
+  grid-template-columns: minmax(0, 1fr);
   gap: 1px;
+  width: 100%;
+  max-width: 100%;
   background: color-mix(in srgb, var(--oh-line, rgba(15,23,42,.14)) 100%, transparent);
   border: 1px solid color-mix(in srgb, var(--oh-line, rgba(15,23,42,.14)) 100%, transparent);
-}
-/* 2 columns only when each card has enough width for full titles */
-@media (min-width: 1024px) {
-  .obj-hover3d-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-}
-@media (max-width: 1023px) {
-  .obj-hover3d-link { gap: .9rem; padding: .9rem 1rem; }
-  .obj-hover3d-icon { width: 3.75rem; height: 3.75rem; }
-  .obj-hover3d-lucide svg { width: 1.45rem; height: 1.45rem; }
 }
 .obj-hover3d {
   --oh-fg: #0f172a;
@@ -627,6 +625,8 @@ html.dark #objects.spectrum-on {
   background: var(--oh-bg);
   overflow: visible;
   cursor: default;
+  min-width: 0;
+  max-width: 100%;
 }
 html.dark #objects.hover3d-on .obj-hover3d {
   --oh-fg: #f8fafc;
@@ -729,12 +729,39 @@ html.dark #objects.hover3d-on .obj-hover3d {
   border-radius: 0; /* rectangular, site style */
   border: 1px solid var(--oh-line); color: var(--oh-muted);
 }
+@media (min-width: 1024px) {
+  .obj-hover3d-list { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1023px) {
+  .obj-hover3d-link { gap: .75rem; padding: .85rem; }
+  .obj-hover3d-icon { width: 3.25rem; height: 3.25rem; }
+  .obj-hover3d-lucide svg { width: 1.35rem; height: 1.35rem; }
+  .obj-hover3d-title {
+    white-space: normal;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .obj-hover3d-title__fill,
+  .obj-hover3d-title__overlay { display: none !important; }
+  .obj-hover3d-desc { -webkit-line-clamp: 2; font-size: .78rem; }
+}
+@media (max-width: 479px) {
+  .obj-hover3d-link {
+    flex-direction: column !important;
+    align-items: flex-start;
+    gap: .7rem;
+    padding: .9rem .85rem;
+  }
+  .obj-hover3d-icon { width: 3rem; height: 3rem; }
+}
 @media (prefers-reduced-motion: reduce) {
   .obj-hover3d-lucide, .obj-hover3d-corner, .obj-hover3d-title__fill, .obj-hover3d-title__overlay { transition: none; }
 }
 `;
     const style = document.createElement("style");
-    style.id = "objects-hover3d-css-v7";
+    style.id = "objects-hover3d-css-v9";
     style.textContent = css;
     document.head.appendChild(style);
   }
@@ -743,7 +770,7 @@ html.dark #objects.hover3d-on .obj-hover3d {
     const ul = document.createElement("ul");
     ul.className = "obj-hover3d-list";
     ul.setAttribute("data-obj-hover3d", "1");
-    ul.setAttribute("data-obj-hover3d-v", "7");
+    ul.setAttribute("data-obj-hover3d-v", "9");
     ul.innerHTML = items.map(function (item) {
       const tags = (item.tags || []).map(function (t) { return "<li>" + t + "</li>"; }).join("");
       const title = item.title || "";
@@ -786,7 +813,7 @@ html.dark #objects.hover3d-on .obj-hover3d {
       return;
     }
     var existingList = section.querySelector('ul[data-obj-hover3d="1"]');
-    if (existingList && existingList.getAttribute("data-obj-hover3d-v") === "7") {
+    if (existingList && existingList.getAttribute("data-obj-hover3d-v") === "9") {
       section.classList.add("hover3d-on");
       return;
     }
