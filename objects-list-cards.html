@@ -6,7 +6,7 @@
   <title>Wibify lists → Объекты защиты (каталог)</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Manrope:wght@500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
   <style>
     :root {
       --bg: #0b1220;
@@ -17,8 +17,12 @@
       --chip: #151d2e;
       --chip-h: #1c2740;
       --safety: #ea580c;
-      --font: "Manrope", system-ui, sans-serif;
-      --mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-sans: "Inter", system-ui, sans-serif;
+      --font-display: "Manrope", system-ui, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font: var(--font-sans);
+      --display: var(--font-display);
+      --mono: var(--font-mono);
       --max: min(72rem, calc(100% - 2rem));
     }
     * { box-sizing: border-box; }
@@ -58,7 +62,7 @@
       font-family: var(--mono); font-size: .65rem; color: var(--safety);
       letter-spacing: .1em; text-transform: uppercase;
     }
-    .block-meta h2 { margin: 0; font-size: 1.15rem; font-weight: 800; }
+    .block-meta h2 { margin: 0; font-family: var(--display); font-size: 1.15rem; font-weight: 800; }
     .block-meta .src { color: var(--muted); font-size: .82rem; }
     .mask-x {
       overflow: hidden;
@@ -194,6 +198,101 @@
       font-size: .68rem; padding: .2rem .45rem; border: 1px solid var(--line); color: var(--muted);
     }
 
+
+    /* Spectrum list (Wibify rows → Objects / Advantages) */
+    .spectrum { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
+    .spectrum-item {
+      position: relative; border-bottom: 1px solid var(--line);
+      opacity: 1; transform: translateY(0);
+      transition: opacity .55s ease, transform .55s ease;
+    }
+    .spectrum.is-animate .spectrum-item {
+      opacity: 0; transform: translateY(14px);
+    }
+    .spectrum.is-animate .spectrum-item.is-in {
+      opacity: 1; transform: translateY(0);
+    }
+    .spectrum-item::before {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(90deg, rgba(234,88,12,.16), rgba(234,88,12,.04) 48%, transparent 78%);
+      opacity: 0; transition: opacity .35s ease; pointer-events: none;
+    }
+    .spectrum-item.is-active::before, .spectrum-item:hover::before { opacity: 1; }
+    .spectrum-link {
+      position: relative; z-index: 1;
+      display: grid;
+      grid-template-columns: 3rem 3.4rem minmax(12rem, 1.05fr) minmax(12rem, 1fr) 3rem;
+      gap: 1rem 1.15rem; align-items: center;
+      padding: 1.45rem 1rem; color: inherit; text-decoration: none;
+    }
+    @media (max-width: 900px) {
+      .spectrum-link {
+        grid-template-columns: 2.5rem 3rem 1fr auto;
+        grid-template-areas: "num ico title arr" ". . desc desc" ". . tags tags";
+      }
+      .spectrum-num { grid-area: num; } .spectrum-ico { grid-area: ico; }
+      .spectrum-main { grid-area: title; } .spectrum-side { grid-area: desc; }
+      .spectrum-tags { grid-area: tags; } .spectrum-arr { grid-area: arr; }
+    }
+    .spectrum-num {
+      font-family: var(--mono); font-size: .78rem; font-weight: 500; letter-spacing: .1em;
+      color: var(--muted); text-align: center;
+      transition: color .3s ease, transform .35s ease;
+    }
+    .spectrum-item.is-active .spectrum-num, .spectrum-item:hover .spectrum-num { color: var(--safety); transform: translateY(-1px); }
+    .spectrum-ico {
+      width: 3.15rem; height: 3.15rem; border-radius: 999px;
+      display: grid; place-items: center; border: 1px solid var(--line);
+      color: var(--ink); background: rgba(255,255,255,.03);
+      transition: border-color .3s ease, color .3s ease, background .3s ease, transform .35s cubic-bezier(.22,1,.36,1), box-shadow .35s ease;
+    }
+    .spectrum-ico svg { width: 1.45rem; height: 1.45rem; }
+    .spectrum-item.is-active .spectrum-ico, .spectrum-item:hover .spectrum-ico {
+      border-color: rgba(234,88,12,.65); color: var(--safety);
+      background: rgba(234,88,12,.12); transform: scale(1.06);
+      box-shadow: 0 0 0 4px rgba(234,88,12,.12);
+    }
+    .spectrum-cat {
+      display: block; margin: 0 0 .4rem; font-family: var(--mono);
+      font-size: .62rem; letter-spacing: .14em; text-transform: uppercase; color: var(--safety);
+    }
+    .spectrum-title {
+      margin: 0; font-family: var(--display);
+      font-size: clamp(1.2rem, 2.1vw, 1.65rem); font-weight: 800;
+      line-height: 1.18; letter-spacing: -0.025em; max-width: 22rem;
+      transition: transform .35s cubic-bezier(.22,1,.36,1);
+    }
+    .spectrum-item.is-active .spectrum-title, .spectrum-item:hover .spectrum-title { transform: translateX(4px); }
+    .spectrum-desc {
+      margin: 0 0 .75rem; font-family: var(--font-sans);
+      color: var(--muted); font-size: .9rem; line-height: 1.55; max-width: 34rem;
+    }
+    .spectrum-tags { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: .4rem; }
+    .spectrum-tags li {
+      font-family: var(--font-sans); font-size: .72rem; font-weight: 500;
+      padding: .28rem .6rem; border: 1px solid var(--line); border-radius: 999px;
+      color: rgba(248,250,252,.72); background: rgba(255,255,255,.03);
+    }
+    .spectrum-arr {
+      width: 2.75rem; height: 2.75rem; border-radius: 999px;
+      display: grid; place-items: center; border: 1px solid var(--line); color: var(--muted);
+      transition: background .3s ease, border-color .3s ease, color .3s ease, transform .35s cubic-bezier(.22,1,.36,1);
+      justify-self: end;
+    }
+    .spectrum-arr svg { width: 1.05rem; height: 1.05rem; }
+    .spectrum-item.is-active .spectrum-arr, .spectrum-item:hover .spectrum-arr {
+      background: var(--safety); border-color: var(--safety); color: #fff;
+      transform: translateX(4px) scale(1.05);
+    }
+    .data-dump {
+      margin-top: 1rem; padding: .9rem 1rem; border: 1px dashed var(--line);
+      background: rgba(0,0,0,.25); font-family: var(--mono); font-size: .68rem;
+      line-height: 1.45; color: rgba(248,250,252,.7); overflow: auto; max-height: 14rem; white-space: pre;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .spectrum-item { opacity: 1; transform: none; transition: none; }
+    }
+
     /* 7 Process timeline */
     .process-stack { list-style: none; margin: 0; padding: 0; border-left: 2px solid rgba(234,88,12,.35); }
     .process-step {
@@ -303,6 +402,8 @@
       <a href="#p04b">04b Folio</a>
       <a href="#p05">05 Industries</a>
       <a href="#p06">06 Services</a>
+      <a href="#p06c">06c Objects</a>
+      <a href="#p06d">06d Advantages</a>
       <a href="#p07">07 Process</a>
       <a href="#p08">08 Journal</a>
       <a href="#p09a">09 Evidence</a>
@@ -311,7 +412,7 @@
       <a href="#p11">11 Footer</a>
     </nav>
 
-    <p class="hero-note"><strong>Каталог list-паттернов Wibify</strong> (wibify.de), контент подставлен под «Объекты защиты». Все блоки подряд в одном файле для выбора.</p>
+    <p class="hero-note"><strong>Каталог list-паттернов Wibify</strong>. Шрифты: <strong>Inter</strong> / <strong>Manrope</strong> / <strong>JetBrains Mono</strong>. Сравни: <a href="#p06c" style="color:var(--safety)">06c Objects</a> и <a href="#p06d" style="color:var(--safety)">06d Advantages</a>.</p>
 
     <!-- 01 -->
     <section class="block" id="p01">
@@ -467,6 +568,25 @@
       </div>
     </section>
 
+
+    <section class="block" id="p06c">
+      <div class="block-meta">
+        <span class="idx">06c</span>
+        <h2>Objects spectrum</h2>
+        <span class="src">вертикальный список · Объекты защиты</span>
+      </div>
+      <ul class="spectrum" id="spectrum-objects" aria-label="Объекты защиты"></ul>
+    </section>
+
+    <section class="block" id="p06d">
+      <div class="block-meta">
+        <span class="idx">06d</span>
+        <h2>Advantages spectrum</h2>
+        <span class="src">тот же паттерн · блок «Преимущества»</span>
+      </div>
+      <ul class="spectrum" id="spectrum-advantages" aria-label="Преимущества"></ul>
+    </section>
+
     <!-- 07 -->
     <section class="block" id="p07">
       <div class="block-meta">
@@ -572,6 +692,264 @@
       </ul>
     </section>
   </div>
+
+
+  <script id="spectrum-data">
+    const ICONS = {"cylinder": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-cylinder\" aria-hidden=\"true\"><ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" />\n  <path d=\"M3 5v14a9 3 0 0 0 18 0V5\" /></svg>", "flame": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-flame\" aria-hidden=\"true\"><path d=\"M12 3q1 4 4 6.5t3 5.5a1 1 0 0 1-14 0 5 5 0 0 1 1-3 1 1 0 0 0 5 0c0-2-1.5-3-1.5-5q0-2 2.5-4\" /></svg>", "waves": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-waves\" aria-hidden=\"true\"><path d=\"M2 6c.6.5 1.2 1 2.5 1C7 7 7 5 9.5 5c2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1\"></path><path d=\"M2 12c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1\"></path><path d=\"M2 18c.6.5 1.2 1 2.5 1 2.5 0 2.5-2 5-2 2.6 0 2.4 2 5 2 2.5 0 2.5-2 5-2 1.3 0 1.9.5 2.5 1\"></path></svg>", "zap": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-zap\" aria-hidden=\"true\"><path d=\"M15.914 4a1.5 1.5 0 00-2.474-1.561l-9 9A1.5 1.5 0 005.5 14h4.002a.5.5 0 01.471.666L8.086 20a1.5 1.5 0 002.475 1.56l9-9A1.5 1.5 0 0018.5 10h-3.997a.5.5 0 01-.472-.667z\" /></svg>", "gauge": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-gauge\" aria-hidden=\"true\"><path d=\"m12 14 4-4\" />\n  <path d=\"M3.34 19a10 10 0 1 1 17.32 0\" /></svg>", "building-2": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-building-2\" aria-hidden=\"true\"><path d=\"M10 12h4\" />\n  <path d=\"M10 8h4\" />\n  <path d=\"M14 21v-3a2 2 0 0 0-4 0v3\" />\n  <path d=\"M6 10H4a2 2 0 0 0-2 2v7a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-2\" />\n  <path d=\"M6 21V5a2 2 0 0 1 2-2h8a2 2 0 0 1 2 2v16\" /></svg>", "database": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-database\" aria-hidden=\"true\"><ellipse cx=\"12\" cy=\"5\" rx=\"9\" ry=\"3\" />\n  <path d=\"M3 5V19A9 3 0 0 0 21 19V5\" />\n  <path d=\"M3 12A9 3 0 0 0 21 12\" /></svg>", "factory": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-factory\" aria-hidden=\"true\"><path d=\"M12 16h.01\" />\n  <path d=\"M16 16h.01\" />\n  <path d=\"M3 19a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V8.5a.5.5 0 0 0-.769-.422l-4.462 2.844A.5.5 0 0 1 15 10.5v-2a.5.5 0 0 0-.769-.422L9.77 10.922A.5.5 0 0 1 9 10.5V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2z\" />\n  <path d=\"M8 16h.01\" /></svg>", "arrow-up-right": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\" />\n  <path d=\"M7 17 17 7\" /></svg>", "megaphone": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-megaphone\" aria-hidden=\"true\"><path d=\"M11 6a13 13 0 0 0 8.4-2.8A1 1 0 0 1 21 4v12a1 1 0 0 1-1.6.8A13 13 0 0 0 11 14H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2z\" />\n  <path d=\"M6 14a12 12 0 0 0 2.4 7.2 2 2 0 0 0 3.2-2.4A8 8 0 0 1 10 14\" />\n  <path d=\"M8 6v8\" /></svg>", "calendar": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-calendar\" aria-hidden=\"true\"><path d=\"M8 2v4\" />\n  <path d=\"M16 2v4\" />\n  <rect width=\"18\" height=\"18\" x=\"3\" y=\"4\" rx=\"2\" />\n  <path d=\"M3 10h18\" /></svg>", "graduation-cap": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-graduation-cap\" aria-hidden=\"true\"><path d=\"M21.42 10.922a1 1 0 0 0-.019-1.838L12.83 5.18a2 2 0 0 0-1.66 0L2.6 9.08a1 1 0 0 0 0 1.832l8.57 3.908a2 2 0 0 0 1.66 0z\" />\n  <path d=\"M22 10v6\" />\n  <path d=\"M6 12.5V16a6 3 0 0 0 12 0v-3.5\" /></svg>", "globe": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-globe\" aria-hidden=\"true\"><circle cx=\"12\" cy=\"12\" r=\"10\" />\n  <path d=\"M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20\" />\n  <path d=\"M2 12h20\" /></svg>", "mail": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-mail\" aria-hidden=\"true\"><path d=\"m22 7-8.991 5.727a2 2 0 0 1-2.009 0L2 7\" />\n  <rect x=\"2\" y=\"4\" width=\"20\" height=\"16\" rx=\"2\" /></svg>", "hard-hat": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-hard-hat\" aria-hidden=\"true\"><path d=\"M10 10V5a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1v5\" />\n  <path d=\"M14 6a6 6 0 0 1 6 6v3\" />\n  <path d=\"M4 15v-3a6 6 0 0 1 6-6\" />\n  <rect x=\"2\" y=\"15\" width=\"20\" height=\"4\" rx=\"1\" /></svg>", "sliders-horizontal": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-sliders-horizontal\" aria-hidden=\"true\"><path d=\"M10 5H3\" />\n  <path d=\"M12 19H3\" />\n  <path d=\"M14 3v4\" />\n  <path d=\"M16 17v4\" />\n  <path d=\"M21 12h-9\" />\n  <path d=\"M21 19h-5\" />\n  <path d=\"M21 5h-7\" />\n  <path d=\"M8 10v4\" />\n  <path d=\"M8 12H3\" /></svg>", "shield": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-shield\" aria-hidden=\"true\"><path d=\"M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z\" /></svg>", "git-branch": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-git-branch\" aria-hidden=\"true\"><path d=\"M15 6a9 9 0 0 0-9 9V3\" />\n  <circle cx=\"18\" cy=\"6\" r=\"3\" />\n  <circle cx=\"6\" cy=\"18\" r=\"3\" /></svg>", "triangle-alert": "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-triangle-alert\" aria-hidden=\"true\"><path d=\"m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3\" />\n  <path d=\"M12 9v4\" />\n  <path d=\"M12 17h.01\" /></svg>"};
+    const ARROW_ICON = "<svg xmlns=\"http://www.w3.org/2000/svg\" width=\"24\" height=\"24\" viewBox=\"0 0 24 24\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"2\" stroke-linecap=\"round\" stroke-linejoin=\"round\" class=\"lucide lucide-arrow-up-right\" aria-hidden=\"true\"><path d=\"M7 7h10v10\" />\n  <path d=\"M7 17 17 7\" /></svg>";
+    const OBJECTS_SPECTRUM = [
+  {
+    "id": "01",
+    "category": "Резервуарные парки",
+    "title": "Защита резервуаров РВС как единый контур.",
+    "description": "Защита вертикальных стальных резервуаров от падения БПЛА и обломков. Сетка перекрывает всю площадь парка.",
+    "tags": [
+      "РВС",
+      "Парк",
+      "Каркас",
+      "Сетка"
+    ],
+    "icon": "cylinder",
+    "href": "/services/zashchita-rvs-ot-bpla",
+    "active": true
+  },
+  {
+    "id": "02",
+    "category": "Нефтегазовые",
+    "title": "Сепараторы",
+    "description": "Защита сепарационного оборудования с сохранением технологических проёмов для обслуживания.",
+    "tags": [
+      "Сепараторы",
+      "Проёмы",
+      "Регламент"
+    ],
+    "icon": "flame",
+    "href": "/services/zashchita-separatorov-ot-bpla",
+    "active": false
+  },
+  {
+    "id": "03",
+    "category": "Насосные станции",
+    "title": "БКНС",
+    "description": "Защита насосного оборудования блочных кустовых насосных станций от воздушных угроз.",
+    "tags": [
+      "БКНС",
+      "Насосы",
+      "Блоки"
+    ],
+    "icon": "waves",
+    "href": "/services/zashchita-nasosnyh-stantsiy-ot-bpla",
+    "active": false
+  },
+  {
+    "id": "04",
+    "category": "Энергетика",
+    "title": "Трансформаторные подстанции",
+    "description": "Защита силовых трансформаторов и распределительных устройств без нарушения электробезопасности.",
+    "tags": [
+      "ТП",
+      "РУ",
+      "Зазоры",
+      "ТБ"
+    ],
+    "icon": "zap",
+    "href": "/services/zashchita-podstantsiy-ot-bpla",
+    "active": false
+  },
+  {
+    "id": "05",
+    "category": "Приборы и автоматика",
+    "title": "КИПиА",
+    "description": "Защита систем контрольно-измерительных приборов и автоматики от повреждений.",
+    "tags": [
+      "КИПиА",
+      "Шкафы",
+      "Датчики"
+    ],
+    "icon": "gauge",
+    "href": "/#objects",
+    "active": false
+  },
+  {
+    "id": "06",
+    "category": "Модульные здания",
+    "title": "Операторные",
+    "description": "Защита персонала и систем управления в операторных и блок-боксах.",
+    "tags": [
+      "Операторные",
+      "АСУ",
+      "Эвакуация"
+    ],
+    "icon": "building-2",
+    "href": "/services/zashchita-operatornyh-ot-bpla",
+    "active": false
+  },
+  {
+    "id": "07",
+    "category": "Учёт продукции",
+    "title": "Узлы учёта",
+    "description": "Защита узлов учёта нефти и газа с сохранением доступа к средствам измерения.",
+    "tags": [
+      "Учёт",
+      "Метрология",
+      "Доступ"
+    ],
+    "icon": "database",
+    "href": "/#objects",
+    "active": false
+  },
+  {
+    "id": "08",
+    "category": "Комплексные объекты",
+    "title": "Технологические установки",
+    "description": "Защита технологических установок комплексной подготовки нефти и газа.",
+    "tags": [
+      "УКПН",
+      "УКПГ",
+      "Площадка"
+    ],
+    "icon": "factory",
+    "href": "/#objects",
+    "active": false
+  }
+];
+    const ADVANTAGES_SPECTRUM = [
+  {
+    "id": "01",
+    "category": "Сроки",
+    "title": "Быстрый монтаж без остановки производства.",
+    "description": "Монтаж на действующих объектах без остановки производства. Типовые элементы сокращают сроки работ.",
+    "tags": [
+      "Монтаж",
+      "Типовые узлы",
+      "Сроки"
+    ],
+    "icon": "zap",
+    "href": "/#advantages",
+    "active": true
+  },
+  {
+    "id": "02",
+    "category": "Эксплуатация",
+    "title": "Обслуживание без демонтажа защиты.",
+    "description": "Полный доступ к оборудованию через технологические проёмы. Не требуется снимать защиту для регламентных работ.",
+    "tags": [
+      "Проёмы",
+      "Регламент",
+      "Доступ"
+    ],
+    "icon": "hard-hat",
+    "href": "/#advantages",
+    "active": false
+  },
+  {
+    "id": "03",
+    "category": "Проектирование",
+    "title": "Адаптация под геометрию объекта.",
+    "description": "Под любые габариты и типы технологических объектов. Индивидуальное проектирование под каждый объект.",
+    "tags": [
+      "КМ",
+      "КМД",
+      "Индивидуально"
+    ],
+    "icon": "sliders-horizontal",
+    "href": "/#advantages",
+    "active": false
+  },
+  {
+    "id": "04",
+    "category": "Срок службы",
+    "title": "Долговечность и ремонтопригодность.",
+    "description": "Высокая ремонтопригодность и длительный срок службы. Оцинкованные конструкции с антикоррозийным покрытием.",
+    "tags": [
+      "Оцинковка",
+      "Антикор",
+      "Ремонт"
+    ],
+    "icon": "shield",
+    "href": "/#advantages",
+    "active": false
+  },
+  {
+    "id": "05",
+    "category": "Бюджет",
+    "title": "Поэтапная реализация проекта.",
+    "description": "Возможность реализации проекта по этапам. Распределение нагрузки на бюджет и график производства работ.",
+    "tags": [
+      "Этапы",
+      "Бюджет",
+      "График"
+    ],
+    "icon": "git-branch",
+    "href": "/#advantages",
+    "active": false
+  },
+  {
+    "id": "06",
+    "category": "Безопасность",
+    "title": "Снижение рисков аварии и простоя.",
+    "description": "Защита критически важного оборудования от повреждений. Снижение вероятности аварии и остановки производства.",
+    "tags": [
+      "БПЛА",
+      "Риски",
+      "Непрерывность"
+    ],
+    "icon": "triangle-alert",
+    "href": "/#advantages",
+    "active": false
+  }
+];
+    function renderSpectrum(listEl, items) {
+      if (!listEl) return;
+      listEl.innerHTML = items.map(function (item, idx) {
+        var tags = (item.tags || []).map(function (t) { return "<li>" + t + "</li>"; }).join("");
+        var active = item.active ? " is-active" : "";
+        var icon = ICONS[item.icon] || "";
+        return '<li class="spectrum-item' + active + '" style="transition-delay:' + (idx * 60) + 'ms">' +
+          '<a class="spectrum-link" href="' + item.href + '">' +
+          '<span class="spectrum-num">' + item.id + '</span>' +
+          '<span class="spectrum-ico">' + icon + '</span>' +
+          '<div class="spectrum-main"><span class="spectrum-cat">' + item.category + '</span>' +
+          '<h3 class="spectrum-title">' + item.title + '</h3></div>' +
+          '<div class="spectrum-side"><p class="spectrum-desc">' + item.description + '</p>' +
+          '<ul class="spectrum-tags">' + tags + '</ul></div>' +
+          '<span class="spectrum-arr" aria-hidden="true">' + ARROW_ICON + '</span></a></li>';
+      }).join("");
+    }
+    renderSpectrum(document.getElementById("spectrum-objects"), OBJECTS_SPECTRUM);
+    renderSpectrum(document.getElementById("spectrum-advantages"), ADVANTAGES_SPECTRUM);
+    document.querySelectorAll(".spectrum-item").forEach(function (el) { el.classList.add("is-in"); });
+    document.querySelectorAll(".spectrum").forEach(function (list) {
+      list.addEventListener("mouseover", function (e) {
+        var item = e.target.closest(".spectrum-item");
+        if (!item || !list.contains(item)) return;
+        list.querySelectorAll(".spectrum-item").forEach(function (el) { el.classList.toggle("is-active", el === item); });
+      });
+      list.addEventListener("mouseleave", function () {
+        var pinned = list.querySelector('.spectrum-item[data-pinned="1"]');
+        list.querySelectorAll(".spectrum-item").forEach(function (el) { el.classList.toggle("is-active", el === pinned); });
+      });
+    });
+    function reveal(list) { list.querySelectorAll(".spectrum-item").forEach(function (el) { el.classList.add("is-in"); }); }
+    if ("IntersectionObserver" in window) {
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (!entry.isIntersecting) return;
+          reveal(entry.target); io.unobserve(entry.target);
+        });
+      }, { threshold: 0.08 });
+      document.querySelectorAll(".spectrum").forEach(function (list) { io.observe(list); });
+    }
+    requestAnimationFrame(function () {
+      document.querySelectorAll(".spectrum").forEach(function (list) {
+        var r = list.getBoundingClientRect();
+        if (r.top < innerHeight && r.bottom > 0) reveal(list);
+      });
+      // always reveal hash target after short delay
+      setTimeout(function () { document.querySelectorAll(".spectrum-item").forEach(function (el) { el.classList.add("is-in"); }); }, 400);
+    });
+    document.querySelectorAll(".spectrum-item.is-active").forEach(function (el) { el.setAttribute("data-pinned", "1"); });
+  </script>
 
   <script>
     document.querySelectorAll("#faq-demo .faq-item button").forEach(function (btn) {

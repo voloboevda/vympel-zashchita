@@ -1,12 +1,26 @@
-# .htaccess для Beget / статический Next.js
+# .htaccess для Beget / статический лендинг вымпел-защита.рф
 
 RewriteEngine On
+
+# --- Canonical host + HTTPS (apex, no www) ---
+# www → apex
+RewriteCond %{HTTP_HOST} ^www\.(.+)$ [NC]
+RewriteRule ^ https://%1%{REQUEST_URI} [R=301,L]
+
+# HTTP → HTTPS (when HTTPS env is off; Beget usually sets HTTPS)
+RewriteCond %{HTTPS} !=on
+RewriteCond %{HTTP:X-Forwarded-Proto} !=https
+RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+
+# --- Removed sections: always 404 (even if folders reappear) ---
+RewriteRule ^(blog|services|admin)(/.*)?$ - [R=404,L]
+RewriteRule ^_archive(/.*)?$ - [R=404,L]
 
 # Форма: /api/leads и /api/leads/ → leads.php
 # Нельзя rewrite'ить leads.php на себя — будет цикл и HTTP 500.
 RewriteRule ^api/leads/?$ api/leads.php [L,QSA]
 
-# SEO / статика Next.js
+# SEO / статика
 AddDefaultCharset UTF-8
 
 <IfModule mod_expires.c>
@@ -14,6 +28,7 @@ AddDefaultCharset UTF-8
   ExpiresByType image/png "access plus 1 month"
   ExpiresByType image/jpeg "access plus 1 month"
   ExpiresByType image/webp "access plus 1 month"
+  ExpiresByType image/x-icon "access plus 1 month"
   ExpiresByType text/css "access plus 1 week"
   ExpiresByType application/javascript "access plus 1 week"
   ExpiresByType text/html "access plus 1 hour"
@@ -27,6 +42,7 @@ AddDefaultCharset UTF-8
   Order Allow,Deny
   Deny from all
 </Files>
+
 
 ErrorDocument 404 /404.html
 
@@ -44,4 +60,3 @@ ErrorDocument 404 /404.html
     Header set Expires "0"
   </FilesMatch>
 </IfModule>
-

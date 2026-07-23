@@ -3,13 +3,23 @@
 User-agent: *
 Allow: /
 Disallow: /admin
+Disallow: /blog
+Disallow: /services
+Disallow: /_archive
 
 User-agent: Yandex
 Allow: /
 Disallow: /admin
+Disallow: /blog
+Disallow: /services
+Disallow: /_archive
+Host: вымпел-защита.рф
 
 User-agent: Googlebot
 Allow: /
 Disallow: /admin
+Disallow: /blog
+Disallow: /services
+Disallow: /_archive
 
 Sitemap: https://вымпел-защита.рф/sitemap.xml
