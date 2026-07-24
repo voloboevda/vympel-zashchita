@@ -1,6 +1,9 @@
-<svg width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="48" height="48" rx="4" fill="#1E293B"/>
-  <path d="M24 6L39.6 15V33L24 42L8.4 33V15L24 6Z" stroke="#FAFAF9" stroke-width="2" fill="none"/>
-  <path d="M16 16L32 24L16 32V24V16Z" fill="#EA580C"/>
-  <rect x="14" y="16" width="2" height="16" fill="#FAFAF9"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="Вымпел Стройсервис">
+  <rect width="120" height="120" rx="12" fill="#0B1220"/>
+  <!-- droplet outline -->
+  <path d="M60 14c18 22 34 40 34 58a34 34 0 1 1-68 0c0-18 16-36 34-58z" fill="none" stroke="#F8FAFC" stroke-width="8" stroke-linejoin="round"/>
+  <!-- inner right curve -->
+  <path d="M68 46c10 10 16 20 16 30a24 24 0 0 1-18 23" fill="none" stroke="#F8FAFC" stroke-width="7" stroke-linecap="round"/>
+  <!-- flame -->
+  <path d="M42 78c0-16 10-26 18-38 2 10 10 14 10 24 0 12-8 20-18 20-6 0-10-3-10-6z" fill="#EA580C"/>
 </svg>

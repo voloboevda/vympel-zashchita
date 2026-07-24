@@ -26,27 +26,33 @@
   <meta name="twitter:title" content="Антидроновые сетки и защита от БПЛА | Вымпел Стройсервис" />
   <meta name="twitter:description" content="Проектирование и монтаж антидроновых сеток для нефтебаз, РВС, подстанций и промышленных объектов." />
   <meta name="twitter:image" content="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/images/og-image.jpg?v=25" />
-  <link rel="icon" id="favicon-ico" href="/favicon.ico?v=23" sizes="any" />
-  <link rel="icon" id="favicon-32" href="/favicon-32-light.png?v=23" type="image/png" sizes="32x32" />
-  <link rel="icon" id="favicon-64" href="/favicon-64-light.png?v=23" type="image/png" sizes="64x64" />
-  <link rel="apple-touch-icon" href="/apple-touch-icon.png?v=23" />
+  <!-- Favicons: absolute Punycode URLs for Yandex (IDN). SVG + 120px preferred. -->
+  <link rel="icon" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon.svg?v=24" type="image/svg+xml" />
+  <link rel="icon" id="favicon-ico" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon.ico?v=24" type="image/x-icon" sizes="any" />
+  <link rel="shortcut icon" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon.ico?v=24" type="image/x-icon" />
+  <link rel="icon" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon-120.png?v=24" type="image/png" sizes="120x120" />
+  <link rel="icon" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon-16.png?v=24" type="image/png" sizes="16x16" />
+  <link rel="icon" id="favicon-32" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon-32.png?v=24" type="image/png" sizes="32x32" />
+  <link rel="icon" id="favicon-64" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/favicon-64.png?v=24" type="image/png" sizes="64x64" />
+  <link rel="apple-touch-icon" href="https://xn----8sbafpniuh4a3b8esa.xn--p1ai/apple-touch-icon.png?v=24" sizes="180x180" />
   <script>
     (function () {
       var KEY = "vympel-theme";
       var dark = false;
       try { dark = localStorage.getItem(KEY) === "dark"; } catch (e) {}
       if (dark) document.documentElement.classList.add("dark");
-      var v = "23";
-      var icon32 = dark ? "/favicon-32-light.png?v=" + v : "/favicon-32.png?v=" + v;
-      var icon64 = dark ? "/favicon-64-light.png?v=" + v : "/favicon-64.png?v=" + v;
+      var ORIGIN = "https://xn----8sbafpniuh4a3b8esa.xn--p1ai";
+      var v = "24";
+      var icon32 = dark ? ORIGIN + "/favicon-32-light.png?v=" + v : ORIGIN + "/favicon-32.png?v=" + v;
+      var icon64 = dark ? ORIGIN + "/favicon-64-light.png?v=" + v : ORIGIN + "/favicon-64.png?v=" + v;
       var a = document.getElementById("favicon-32");
       var b = document.getElementById("favicon-64");
       if (a) a.setAttribute("href", icon32);
       if (b) b.setAttribute("href", icon64);
       window.__vympelSetFavicon = function (theme) {
         var isDark = theme === "dark";
-        var i32 = isDark ? "/favicon-32-light.png?v=" + v : "/favicon-32.png?v=" + v;
-        var i64 = isDark ? "/favicon-64-light.png?v=" + v : "/favicon-64.png?v=" + v;
+        var i32 = isDark ? ORIGIN + "/favicon-32-light.png?v=" + v : ORIGIN + "/favicon-32.png?v=" + v;
+        var i64 = isDark ? ORIGIN + "/favicon-64-light.png?v=" + v : ORIGIN + "/favicon-64.png?v=" + v;
         var l32 = document.getElementById("favicon-32");
         var l64 = document.getElementById("favicon-64");
         if (l32) l32.setAttribute("href", i32);

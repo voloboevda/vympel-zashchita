@@ -23,6 +23,13 @@ RewriteRule ^api/leads/?$ api/leads.php [L,QSA]
 # SEO / статика
 AddDefaultCharset UTF-8
 
+# Favicon MIME types (helps Yandex/Google pick the right icon)
+<IfModule mod_mime.c>
+  AddType image/x-icon .ico
+  AddType image/svg+xml .svg
+  AddType image/png .png
+</IfModule>
+
 <IfModule mod_expires.c>
   ExpiresActive On
   ExpiresByType image/png "access plus 1 month"
